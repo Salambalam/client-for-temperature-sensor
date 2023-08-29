@@ -1,9 +1,13 @@
 package ru.chemakin.Client;
 
 
+import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.RequestEntity;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.client.RestTemplate;
 import ru.chemakin.Client.dto.MeasurementsDTO;
+import ru.chemakin.Client.dto.MeasurementsResponse;
 import ru.chemakin.Client.dto.SensorDTO;
 
 import java.util.HashMap;
@@ -13,12 +17,12 @@ public class Client
 {
     public static void main( String[] args )
     {
-        SensorDTO sensorDTO = new SensorDTO("ttt");
+//        registerSensor("client_sensor");
+//        for (int i = 0; i < 500; i++) {
+//            addMeasurement(Math.random()*50, false, "client_sensor");
+//        }
 
-        addMeasurement(15.4, false, sensorDTO, new RestTemplate());
-
-
-
+        makeGetRequest();
     }
 
     public static void registerSensor(String nameSensorDTO){
@@ -48,5 +52,19 @@ public class Client
     public static void makeRequestWithJSONData(Map<String, Object> jsonData, String url){
         final RestTemplate restTemplate = new RestTemplate();
         restTemplate.postForObject(url, jsonData, HttpStatus.class);
+    }
+
+    // TODO fix error
+    public static void makeGetRequest(){
+        RestTemplate restTemplate = new RestTemplate();
+        String url = "http://localhost:8080/measurements";
+        ResponseEntity<MeasurementsResponse> entity = restTemplate.getForEntity(url, MeasurementsResponse.class);
+
+        MeasurementsResponse measurementsResponse = entity.getBody();
+
+        for (MeasurementsDTO m:
+             measurementsResponse.getMeasurementsDTOS()) {
+            System.out.println(m.getValue() + " - " + m.isRaining() + " - " + m.getSensorDTO().getName());
+        }
     }
 }
