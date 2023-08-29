@@ -56,7 +56,6 @@ public class Client {
         restTemplate.postForObject(url, entity, HttpStatus.class);
     }
 
-    // TODO fix error
     public static void makeGetRequest() {
         RestTemplate restTemplate = new RestTemplate();
         String url = "http://localhost:8080/measurements";
